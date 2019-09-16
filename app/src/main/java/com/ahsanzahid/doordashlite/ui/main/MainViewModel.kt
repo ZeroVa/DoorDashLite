@@ -14,9 +14,9 @@ class MainViewModel(private val repository: RestaurantsRepository) : ViewModel()
         get() = _restaurants
 
     fun loadRestaurants() {
-        _restaurants.addSource(repository.loadRestaurants()) { outcome ->
-            _restaurants.value = outcome
-            //          Do stuff with the outcome here if we need.
+        val repoLiveData = repository.loadRestaurants()
+        _restaurants.addSource(repoLiveData) { outcome ->
+            _restaurants.postValue(outcome)
         }
 
     }

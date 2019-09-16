@@ -54,8 +54,22 @@ class MainViewModelTest {
                 MutableLiveData(Outcome.success(fakeRestaurants))
             )
         viewModel.loadRestaurants()
-        assert(viewModel.restaurants.value!! is Outcome.Success)
-        assert((viewModel.restaurants.value!! as Outcome.Success).data.isNotEmpty())
+        viewModel.restaurants.observeForever {
+            assert(it is Outcome.Success)
+            assert((it as Outcome.Success).data.isNotEmpty())
+        }
+    }
+
+    @Test
+    fun testThatLoadingStatePassesThrough() {
+        every {
+            restaurantsRepository.loadRestaurants()
+        }
+            .returns(MutableLiveData(Outcome.loading(true)))
+        viewModel.loadRestaurants()
+        viewModel.restaurants.observeForever {
+            assert(it is Outcome.Progress)
+        }
     }
 
     @Test
@@ -66,7 +80,9 @@ class MainViewModelTest {
             .returns(MutableLiveData(Outcome.failure(Throwable("Network Error!"))))
 
         viewModel.loadRestaurants()
-        assert(viewModel.restaurants.value!! is Outcome.Failure)
+        viewModel.restaurants.observeForever {
+            assert(it is Outcome.Failure)
+        }
     }
 
 
