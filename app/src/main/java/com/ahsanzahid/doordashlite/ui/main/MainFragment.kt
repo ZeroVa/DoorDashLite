@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.ahsanzahid.doordashlite.R
 import com.ahsanzahid.doordashlite.model.Outcome
+import com.ahsanzahid.doordashlite.model.Restaurant
+import kotlinx.android.synthetic.main.main_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainFragment : Fragment() {
@@ -36,18 +38,13 @@ class MainFragment : Fragment() {
             when (outcome) {
                 is Outcome.Success -> {
 //                    TODO: Success State
-                    Log.e("DOORDASHLITE", outcome.data.toString())
-                    context?.let { context ->
-                        Toast.makeText(context, outcome.data.size.toString(), Toast.LENGTH_LONG)
-                            .show()
-                    }
+                    showRestaurantsList(outcome.data)
                 }
                 is Outcome.Progress -> {
-//                    TODO: Loading state
-                    Log.e("DOORDASHLITE", "LOADING")
+                    showLoadingState()
                 }
                 is Outcome.Failure -> {
-                    Log.e("DOORDASHLITE", outcome.e.message)
+                    showErrorState(outcome)
 
                 }
             }
@@ -55,9 +52,27 @@ class MainFragment : Fragment() {
         })
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    private fun showRestaurantsList(restaurants: List<Restaurant>) {
+        restaurantsRecyclerView.visibility = View.VISIBLE
+        loadingSpinner.visibility = View.GONE
+        errorMessage.visibility = View.GONE
+        context?.let { context ->
+            Toast.makeText(context, restaurants.size.toString(), Toast.LENGTH_LONG)
+                .show()
+        }
     }
 
+    private fun showErrorState(outcome: Outcome.Failure<List<Restaurant>>) {
+        restaurantsRecyclerView.visibility = View.GONE
+        loadingSpinner.visibility = View.GONE
+        errorMessage.visibility = View.VISIBLE
+        Log.e("DOORDASHLITE", outcome.e.message)
+    }
+
+    private fun showLoadingState() {
+        restaurantsRecyclerView.visibility = View.GONE
+        loadingSpinner.visibility = View.VISIBLE
+        errorMessage.visibility = View.GONE
+        Log.e("DOORDASHLITE", "LOADING")
+    }
 }

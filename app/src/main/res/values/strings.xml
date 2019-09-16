@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DoorDashLite</string>
+    <string name="error_swipe_to_retry">Error! Swipe down to retry!</string>
 </resources>
