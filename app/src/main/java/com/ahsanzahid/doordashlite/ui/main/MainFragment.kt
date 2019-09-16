@@ -33,6 +33,9 @@ class MainFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         mainViewModel.loadRestaurants()
+        swipeRefreshLayout.setOnRefreshListener {
+            mainViewModel.loadRestaurants()
+        }
         mainViewModel.restaurants.observe(this, Observer { outcome ->
             Log.e("OUTCOME", outcome.toString())
             when (outcome) {
@@ -53,6 +56,7 @@ class MainFragment : Fragment() {
     }
 
     private fun showRestaurantsList(restaurants: List<Restaurant>) {
+        swipeRefreshLayout.isRefreshing = false
         restaurantsRecyclerView.visibility = View.VISIBLE
         loadingSpinner.visibility = View.GONE
         errorMessage.visibility = View.GONE
@@ -63,6 +67,7 @@ class MainFragment : Fragment() {
     }
 
     private fun showErrorState(outcome: Outcome.Failure<List<Restaurant>>) {
+        swipeRefreshLayout.isRefreshing = false
         restaurantsRecyclerView.visibility = View.GONE
         loadingSpinner.visibility = View.GONE
         errorMessage.visibility = View.VISIBLE
