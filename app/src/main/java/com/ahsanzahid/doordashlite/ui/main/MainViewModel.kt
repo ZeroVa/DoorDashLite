@@ -4,15 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ahsanzahid.doordashlite.model.Restaurant
+import com.ahsanzahid.doordashlite.network.RestaurantsRepository
 
-class MainViewModel : ViewModel() {
+class MainViewModel(val repository: RestaurantsRepository) : ViewModel() {
 
     private val _restaurants: MutableLiveData<List<Restaurant>> = MutableLiveData()
     val restaurants: LiveData<List<Restaurant>>
         get() = _restaurants
 
     fun loadRestaurants() {
-        _restaurants.value = listOf(Restaurant())
+        _restaurants.value = repository.loadRestaurants()
 
     }
 
