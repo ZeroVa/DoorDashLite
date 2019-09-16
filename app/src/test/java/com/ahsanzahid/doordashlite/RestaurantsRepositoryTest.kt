@@ -25,8 +25,22 @@ class RestaurantsRepositoryTest {
     private lateinit var repository: RestaurantsRepository
 
     val fakeRestaurants = listOf(
-        Restaurant(),
-        Restaurant()
+        Restaurant(
+            "123",
+            "Restaurant1",
+            "A test restaurant",
+            "http://lorempixel.com/200/200",
+            "22 minutes",
+            500
+        ),
+        Restaurant(
+            "124",
+            "Restaurant2",
+            "Another test restaurant",
+            "http://lorempixel.com/200/200",
+            "22 minutes",
+            500
+        )
     )
 
     @Before

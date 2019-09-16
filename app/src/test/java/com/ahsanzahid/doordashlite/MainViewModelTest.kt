@@ -22,6 +22,24 @@ class MainViewModelTest {
     lateinit var restaurantsRepository: RestaurantsRepository
 
     lateinit var viewModel: MainViewModel
+    val fakeRestaurants = listOf(
+        Restaurant(
+            "123",
+            "Restaurant1",
+            "A test restaurant",
+            "http://lorempixel.com/200/200",
+            "22 minutes",
+            500
+        ),
+        Restaurant(
+            "124",
+            "Restaurant2",
+            "Another test restaurant",
+            "http://lorempixel.com/200/200",
+            "22 minutes",
+            500
+        )
+    )
 
     @Before
     fun setup() {
@@ -33,7 +51,7 @@ class MainViewModelTest {
     fun testThatViewCanRequestRestaurants() {
         every { restaurantsRepository.loadRestaurants() }
             .returns(
-                MutableLiveData(Outcome.success(listOf(Restaurant())))
+                MutableLiveData(Outcome.success(fakeRestaurants))
             )
         viewModel.loadRestaurants()
         assert(viewModel.restaurants.value!! is Outcome.Success)

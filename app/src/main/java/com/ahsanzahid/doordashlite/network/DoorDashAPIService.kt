@@ -1,6 +1,5 @@
 package com.ahsanzahid.doordashlite.network
 
-import com.ahsanzahid.doordashlite.model.Outcome
 import com.ahsanzahid.doordashlite.model.Restaurant
 import retrofit2.Call
 import retrofit2.http.GET
