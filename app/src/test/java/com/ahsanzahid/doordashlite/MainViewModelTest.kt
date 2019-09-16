@@ -36,4 +36,17 @@ class MainViewModelTest {
         assert(viewModel.restaurants.value!! is Outcome.Success)
         assert((viewModel.restaurants.value!! as Outcome.Success).data.isNotEmpty())
     }
+
+    @Test
+    fun testThatRepositoryErrorPassesError() {
+        every {
+            restaurantsRepository.loadRestaurants()
+        }
+            .returns(Outcome.failure(Throwable("Network Error!")))
+
+        viewModel.loadRestaurants()
+        assert(viewModel.restaurants.value!! is Outcome.Failure)
+    }
+
+
 }
