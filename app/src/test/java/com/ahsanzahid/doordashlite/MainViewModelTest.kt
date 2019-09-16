@@ -1,6 +1,7 @@
 package com.ahsanzahid.doordashlite
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import com.ahsanzahid.doordashlite.model.Outcome
 import com.ahsanzahid.doordashlite.model.Restaurant
 import com.ahsanzahid.doordashlite.network.RestaurantsRepository
@@ -31,7 +32,9 @@ class MainViewModelTest {
     @Test
     fun testThatViewCanRequestRestaurants() {
         every { restaurantsRepository.loadRestaurants() }
-            .returns(Outcome.success(listOf(Restaurant())))
+            .returns(
+                MutableLiveData(Outcome.success(listOf(Restaurant())))
+            )
         viewModel.loadRestaurants()
         assert(viewModel.restaurants.value!! is Outcome.Success)
         assert((viewModel.restaurants.value!! as Outcome.Success).data.isNotEmpty())
@@ -42,7 +45,7 @@ class MainViewModelTest {
         every {
             restaurantsRepository.loadRestaurants()
         }
-            .returns(Outcome.failure(Throwable("Network Error!")))
+            .returns(MutableLiveData(Outcome.failure(Throwable("Network Error!"))))
 
         viewModel.loadRestaurants()
         assert(viewModel.restaurants.value!! is Outcome.Failure)

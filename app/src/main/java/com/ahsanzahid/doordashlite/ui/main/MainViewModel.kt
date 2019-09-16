@@ -1,20 +1,23 @@
 package com.ahsanzahid.doordashlite.ui.main
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import com.ahsanzahid.doordashlite.model.Outcome
 import com.ahsanzahid.doordashlite.model.Restaurant
 import com.ahsanzahid.doordashlite.network.RestaurantsRepository
 
-class MainViewModel(val repository: RestaurantsRepository) : ViewModel() {
+class MainViewModel(private val repository: RestaurantsRepository) : ViewModel() {
 
-    private val _restaurants: MutableLiveData<Outcome<List<Restaurant>>> = MutableLiveData()
+    private val _restaurants: MediatorLiveData<Outcome<List<Restaurant>>> = MediatorLiveData()
     val restaurants: LiveData<Outcome<List<Restaurant>>>
         get() = _restaurants
 
     fun loadRestaurants() {
-        _restaurants.value = repository.loadRestaurants()
+        _restaurants.addSource(repository.loadRestaurants()) { outcome ->
+            _restaurants.value = outcome
+            //          Do stuff with the outcome here if we need.
+        }
 
     }
 
