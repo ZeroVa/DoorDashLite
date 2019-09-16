@@ -1,6 +1,7 @@
 package com.ahsanzahid.doordashlite
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.ahsanzahid.doordashlite.model.Outcome
 import com.ahsanzahid.doordashlite.model.Restaurant
 import com.ahsanzahid.doordashlite.network.RestaurantsRepository
 import com.ahsanzahid.doordashlite.ui.main.MainViewModel
@@ -30,8 +31,9 @@ class MainViewModelTest {
     @Test
     fun testThatViewCanRequestRestaurants() {
         every { restaurantsRepository.loadRestaurants() }
-            .returns(listOf(Restaurant()))
+            .returns(Outcome.success(listOf(Restaurant())))
         viewModel.loadRestaurants()
-        assert(viewModel.restaurants.value!!.isNotEmpty())
+        assert(viewModel.restaurants.value!! is Outcome.Success)
+        assert((viewModel.restaurants.value!! as Outcome.Success).data.isNotEmpty())
     }
 }
