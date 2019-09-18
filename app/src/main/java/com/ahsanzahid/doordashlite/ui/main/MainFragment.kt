@@ -1,6 +1,7 @@
 package com.ahsanzahid.doordashlite.ui.main
 
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,8 +23,15 @@ class MainFragment : Fragment() {
     private val mainViewModel: MainViewModel by viewModel()
     private val restaurantListAdapter by lazy {
         context?.let { context ->
-            RestaurantListAdapter(arrayListOf(), Glide.with(context))
+            RestaurantListAdapter(
+                arrayListOf(),
+                Glide.with(context),
+                ArrayList(datastore.getStringSet("favorites", mutableSetOf()))
+            )
         }
+    }
+    private val datastore by lazy {
+        PreferenceManager.getDefaultSharedPreferences(activity)
     }
 
     override fun onCreateView(
@@ -56,6 +64,15 @@ class MainFragment : Fragment() {
             }
 
         })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val edit = datastore.edit()
+        restaurantListAdapter?.let { restaurantListAdapter ->
+            edit.putStringSet("favorites", restaurantListAdapter.favoritesList.toSet())
+        }
+        edit.apply()
     }
 
     private fun showRestaurantsList(restaurants: List<Restaurant>) {

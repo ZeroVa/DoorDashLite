@@ -1,5 +1,6 @@
 package com.ahsanzahid.doordashlite.ui.main
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -10,7 +11,8 @@ import com.bumptech.glide.RequestManager
 
 class RestaurantListAdapter(
     private val restaurantList: ArrayList<Restaurant>,
-    private val glide: RequestManager
+    private val glide: RequestManager,
+    val favoritesList: ArrayList<String>
 ) :
     RecyclerView.Adapter<RestaurantListAdapter.RestaurantViewHolder>() {
 
@@ -52,6 +54,20 @@ class RestaurantListAdapter(
                 .centerCrop()
                 .placeholder(R.color.colorPrimary)
                 .into(coverImage)
+            if (favoritesList.contains(restaurant.id)) {
+                favoriteButton.setBackgroundColor(Color.RED)
+            } else {
+                favoriteButton.setBackgroundColor(Color.WHITE)
+            }
+
+            favoriteButton.setOnClickListener {
+                if (favoritesList.contains(restaurant.id)) {
+                    favoritesList.remove(restaurant.id)
+                } else {
+                    favoritesList.add(restaurant.id)
+                }
+                notifyDataSetChanged()
+            }
         }
     }
 
